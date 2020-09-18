@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ShareX.UploadersLib</RootNamespace>
     <AssemblyName>ShareX.UploadersLib</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>false</SignAssembly>
     <SccProjectName>
@@ -133,6 +133,7 @@
     <Compile Include="FileUploaders\Box.cs" />
     <Compile Include="FileUploaders\GoogleCloudStorage.cs" />
     <Compile Include="FileUploaders\Lithiio.cs" />
+    <Compile Include="FileUploaders\MegaAuthInfos.cs" />
     <Compile Include="FileUploaders\Plik.cs" />
     <Compile Include="FileUploaders\PlikSettings.cs" />
     <Compile Include="FileUploaders\Puush.cs" />
@@ -474,6 +475,9 @@
       <DependentUpon>CustomUploaderSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CustomUploaderSettingsForm.fr.resx">
+      <DependentUpon>CustomUploaderSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CustomUploaderSettingsForm.ko-KR.resx">
       <DependentUpon>CustomUploaderSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CustomUploaderSettingsForm.pt-PT.resx">
@@ -1013,16 +1017,16 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentFTP">
-      <Version>32.3.2</Version>
+      <Version>32.4.4</Version>
     </PackageReference>
     <PackageReference Include="MegaApiClient">
-      <Version>1.8.0</Version>
+      <Version>1.8.2</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
     <PackageReference Include="SSH.NET">
-      <Version>2016.1.0</Version>
+      <Version>2020.0.0-beta1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

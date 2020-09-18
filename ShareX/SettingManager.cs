@@ -143,7 +143,9 @@ namespace ShareX
 
         public static void LoadApplicationConfig()
         {
-            Settings = ApplicationConfig.Load(ApplicationConfigFilePath, BackupFolder, true, true);
+            Settings = ApplicationConfig.Load(ApplicationConfigFilePath, BackupFolder);
+            Settings.CreateBackup = true;
+            Settings.CreateWeeklyBackup = true;
             Settings.SettingsSaveFailed += Settings_SettingsSaveFailed;
             DefaultTaskSettings = Settings.DefaultTaskSettings;
             ApplicationConfigBackwardCompatibilityTasks();
@@ -177,13 +179,18 @@ namespace ShareX
 
         public static void LoadUploadersConfig()
         {
-            UploadersConfig = UploadersConfig.Load(UploadersConfigFilePath, BackupFolder, true, true);
+            UploadersConfig = UploadersConfig.Load(UploadersConfigFilePath, BackupFolder);
+            UploadersConfig.CreateBackup = true;
+            UploadersConfig.CreateWeeklyBackup = true;
+            UploadersConfig.SupportDPAPIEncryption = true;
             UploadersConfigBackwardCompatibilityTasks();
         }
 
         public static void LoadHotkeysConfig()
         {
-            HotkeysConfig = HotkeysConfig.Load(HotkeysConfigFilePath, BackupFolder, true, true);
+            HotkeysConfig = HotkeysConfig.Load(HotkeysConfigFilePath, BackupFolder);
+            HotkeysConfig.CreateBackup = true;
+            HotkeysConfig.CreateWeeklyBackup = true;
             HotkeysConfigBackwardCompatibilityTasks();
         }
 
@@ -339,29 +346,42 @@ namespace ShareX
 
         public static bool Export(string archivePath, bool settings, bool history)
         {
+            MemoryStream msApplicationConfig = null, msUploadersConfig = null, msHotkeysConfig = null;
+
             try
             {
-                List<string> files = new List<string>();
+                List<ZipEntryInfo> entries = new List<ZipEntryInfo>();
 
                 if (settings)
                 {
-                    files.Add(ApplicationConfigFilename);
-                    files.Add(HotkeysConfigFilename);
-                    files.Add(UploadersConfigFilename);
+                    msApplicationConfig = Settings.SaveToMemoryStream(false);
+                    entries.Add(new ZipEntryInfo(msApplicationConfig, ApplicationConfigFilename));
+
+                    msUploadersConfig = UploadersConfig.SaveToMemoryStream(false);
+                    entries.Add(new ZipEntryInfo(msUploadersConfig, UploadersConfigFilename));
+
+                    msHotkeysConfig = HotkeysConfig.SaveToMemoryStream(false);
+                    entries.Add(new ZipEntryInfo(msHotkeysConfig, HotkeysConfigFilename));
                 }
 
                 if (history)
                 {
-                    files.Add(Program.HistoryFilename);
+                    entries.Add(new ZipEntryInfo(Program.HistoryFilePath));
                 }
 
-                ZipManager.Compress(archivePath, files, Program.PersonalFolder);
+                ZipManager.Compress(archivePath, entries);
                 return true;
             }
             catch (Exception e)
             {
                 DebugHelper.WriteException(e);
                 MessageBox.Show("Error while exporting backup:\r\n" + e, "ShareX - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                msApplicationConfig?.Dispose();
+                msUploadersConfig?.Dispose();
+                msHotkeysConfig?.Dispose();
             }
 
             return false;
@@ -371,7 +391,11 @@ namespace ShareX
         {
             try
             {
-                ZipManager.Extract(archivePath, Program.PersonalFolder);
+                ZipManager.Extract(archivePath, Program.PersonalFolder, true, entry =>
+                {
+                    return Helpers.CheckExtension(entry.Name, new string[] { "json", "xml" });
+                }, 1_000_000_000);
+
                 return true;
             }
             catch (Exception e)

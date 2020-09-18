@@ -99,7 +99,7 @@ namespace ShareX.ImageEffectsLib
 
         public override Bitmap Apply(Bitmap bmp)
         {
-            string imageFolder = Helpers.ExpandFolderVariables(ImageFolder);
+            string imageFolder = Helpers.ExpandFolderVariables(ImageFolder, true);
 
             if (!string.IsNullOrEmpty(imageFolder) && Directory.Exists(imageFolder))
             {
@@ -117,7 +117,6 @@ namespace ShareX.ImageEffectsLib
                         for (int i = 0; i < ImageCount; i++)
                         {
                             string file = RandomFast.Pick(files);
-
                             Bitmap bmpCached = imageCache.GetImage(file);
 
                             if (bmpCached != null)

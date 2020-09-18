@@ -115,6 +115,15 @@ namespace ShareX.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Persian.
+        /// </summary>
+        public static string AboutForm_AboutForm_Language_fa_IR {
+            get {
+                return ResourceManager.GetString("AboutForm_AboutForm_Language_fa_IR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to French.
         /// </summary>
         public static string AboutForm_AboutForm_Language_fr {
@@ -887,6 +896,46 @@ namespace ShareX.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clipboard content: File (Count: {0}).
+        /// </summary>
+        public static string ClipboardContentViewer_ClipboardContentViewer_Load_Clipboard_content__File__Count___0__ {
+            get {
+                return ResourceManager.GetString("ClipboardContentViewer_ClipboardContentViewer_Load_Clipboard_content__File__Count" +
+                        "___0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clipboard content: Image (Size: {0}x{1}).
+        /// </summary>
+        public static string ClipboardContentViewer_ClipboardContentViewer_Load_Clipboard_content__Image__Size___0_x_1__ {
+            get {
+                return ResourceManager.GetString("ClipboardContentViewer_ClipboardContentViewer_Load_Clipboard_content__Image__Size" +
+                        "___0_x_1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clipboard content: Text (Length: {0}).
+        /// </summary>
+        public static string ClipboardContentViewer_ClipboardContentViewer_Load_Clipboard_content__Text__Length___0__ {
+            get {
+                return ResourceManager.GetString("ClipboardContentViewer_ClipboardContentViewer_Load_Clipboard_content__Text__Lengt" +
+                        "h___0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clipboard is empty or contains unknown data..
+        /// </summary>
+        public static string ClipboardContentViewer_ClipboardContentViewer_Load_Clipboard_is_empty_or_contains_unknown_data_ {
+            get {
+                return ResourceManager.GetString("ClipboardContentViewer_ClipboardContentViewer_Load_Clipboard_is_empty_or_contains" +
+                        "_unknown_data_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Supported variables: {0} and other variables such as {1} etc..
         /// </summary>
         public static string ClipboardFormatForm_ClipboardFormatForm_Supported_variables___0__and_other_variables_such_as__1__etc_ {
@@ -943,6 +992,15 @@ namespace ShareX.Properties {
             get {
                 object obj = ResourceManager.GetObject("color", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmation.
+        /// </summary>
+        public static string Confirmation {
+            get {
+                return ResourceManager.GetString("Confirmation", resourceCulture);
             }
         }
         
@@ -1211,6 +1269,16 @@ namespace ShareX.Properties {
         public static System.Drawing.Bitmap es {
             get {
                 object obj = ResourceManager.GetObject("es", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap exclamation {
+            get {
+                object obj = ResourceManager.GetObject("exclamation", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -2918,6 +2986,15 @@ namespace ShareX.Properties {
             get {
                 return ResourceManager.GetString("WorkerTask_GetInvalidConfigResult__0__configuration_is_invalid_or_missing__Please" +
                         "_check__Destination_settings__window_to_configure_it_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like to reset themes?.
+        /// </summary>
+        public static string WouldYouLikeToResetThemes {
+            get {
+                return ResourceManager.GetString("WouldYouLikeToResetThemes", resourceCulture);
             }
         }
         

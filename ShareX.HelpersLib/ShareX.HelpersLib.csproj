@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ShareX.HelpersLib</RootNamespace>
     <AssemblyName>ShareX.HelpersLib</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
@@ -91,6 +91,7 @@
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -103,6 +104,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ControlHider.cs" />
     <Compile Include="Controls\ObjectListView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -139,6 +141,7 @@
     <Compile Include="Controls\ToolStripNumericUpDown.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Cryptographic\DPAPI.cs" />
     <Compile Include="Emoji.cs" />
     <Compile Include="Forms\DebugForm.cs">
       <SubType>Form</SubType>
@@ -146,11 +149,22 @@
     <Compile Include="Forms\DebugForm.Designer.cs">
       <DependentUpon>DebugForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ClipboardViewerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ClipboardViewerForm.designer.cs">
+      <DependentUpon>ClipboardViewerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\ClipboardHelpersEx.cs" />
     <Compile Include="Helpers\JsonHelpers.cs" />
     <Compile Include="ImageFilesCache.cs" />
+    <Compile Include="MaxLengthStream.cs" />
     <Compile Include="PointInfo.cs" />
     <Compile Include="Random\RandomCrypto.cs" />
     <Compile Include="Random\RandomFast.cs" />
+    <Compile Include="Settings\DPAPIEncryptedStringPropertyResolver.cs" />
+    <Compile Include="Settings\DPAPIEncryptedStringValueProvider.cs" />
+    <Compile Include="Settings\JsonEncryptAttribute.cs" />
     <Compile Include="SevenZipManager.cs" />
     <Compile Include="Input\HotkeyForm.cs">
       <SubType>Form</SubType>
@@ -282,9 +296,11 @@
     <Compile Include="NameParser\CodeMenuEntryFilename.cs" />
     <Compile Include="ShareXTheme.cs" />
     <Compile Include="TextBoxTraceListener.cs" />
-    <Compile Include="SafeStringEnumConverter.cs" />
+    <Compile Include="Settings\SafeStringEnumConverter.cs" />
+    <Compile Include="Settings\TypeNameSerializationBinder.cs" />
     <Compile Include="UITypeEditors\EnumDescriptionConverter.cs" />
     <Compile Include="UITypeEditors\DirectoryNameEditor.cs" />
+    <Compile Include="UITypeEditors\EnumProperNameConverter.cs" />
     <Compile Include="UITypeEditors\GradientEditor.cs" />
     <Compile Include="UITypeEditors\JsonFileNameEditor.cs" />
     <Compile Include="UITypeEditors\MyColorConverter.cs" />
@@ -338,12 +354,6 @@
     <Compile Include="Extensions\GraphicsPathExtensions.cs" />
     <Compile Include="ExternalProgram.cs" />
     <Compile Include="FixedSizedQueue.cs" />
-    <Compile Include="Forms\ClipboardContentViewer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ClipboardContentViewer.Designer.cs">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\ErrorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -361,7 +371,7 @@
     <Compile Include="GIF\Quantizer.cs" />
     <Compile Include="Helpers\ImageHelpers.cs" />
     <Compile Include="Native\FolderSelectDialog.cs" />
-    <Compile Include="SettingsBase.cs" />
+    <Compile Include="Settings\SettingsBase.cs" />
     <Compile Include="Helpers\ShortcutHelpers.cs" />
     <Compile Include="ShareXResources.cs" />
     <Compile Include="StringLineReader.cs" />
@@ -376,6 +386,7 @@
     <Compile Include="UnsafeBitmap.cs" />
     <Compile Include="UpdateChecker\AppVeyor.cs" />
     <Compile Include="UpdateChecker\AppVeyorUpdateChecker.cs" />
+    <Compile Include="UpdateChecker\FFmpegUpdateChecker.cs" />
     <Compile Include="UpdateChecker\GitHubUpdateChecker.cs" />
     <Compile Include="UpdateChecker\UpdateChecker.cs" />
     <Compile Include="UpdateChecker\DownloaderForm.cs">
@@ -476,21 +487,19 @@
     <Compile Include="Links.cs" />
     <Compile Include="Vector2.cs" />
     <Compile Include="WindowState.cs" />
-    <Compile Include="WritablePropertiesOnlyResolver.cs" />
+    <Compile Include="Settings\WritablePropertiesOnlyResolver.cs" />
     <Compile Include="XmlColor.cs" />
     <Compile Include="XmlFont.cs" />
-    <Compile Include="ZipManager.cs" />
+    <Compile Include="Zip\ZipEntryInfo.cs" />
+    <Compile Include="Zip\ZipManager.cs" />
     <EmbeddedResource Include="Controls\ExportImportControl.pt-PT.resx">
       <DependentUpon>ExportImportControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\MyPictureBox.pt-PT.resx">
       <DependentUpon>MyPictureBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.fa-IR.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.pt-PT.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\ClipboardViewerForm.resx">
+      <DependentUpon>ClipboardViewerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ColorPickerForm.de.resx">
       <DependentUpon>ColorPickerForm.cs</DependentUpon>
@@ -776,57 +785,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DNSChangerForm.zh-TW.resx">
       <DependentUpon>DNSChangerForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.de.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.es-MX.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.es.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.fr.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.hu.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.id-ID.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.it-IT.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.ko-KR.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.nl-NL.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.pt-BR.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.ru.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.tr.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.uk.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.vi-VN.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.zh-CN.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.zh-TW.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ClipboardContentViewer.resx">
-      <DependentUpon>ClipboardContentViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DebugForm.de.resx">
       <DependentUpon>DebugForm.cs</DependentUpon>
@@ -1467,7 +1425,16 @@
     <None Include="Resources\ShareX_Icon_White.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\LoadingSmall.gif" />
+    <None Include="Resources\LoadingSmallBlack.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LoadingSmallWhite.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clipboard-block.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tick.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -184,7 +184,14 @@ namespace ShareX
                     }
                     break;
                 case HotkeyType.ImageEffects:
-                    OpenImageEffects(taskSettings);
+                    if (command != null && !string.IsNullOrEmpty(command.Parameter) && File.Exists(command.Parameter))
+                    {
+                        OpenImageEffects(command.Parameter, taskSettings);
+                    }
+                    else
+                    {
+                        OpenImageEffects(taskSettings);
+                    }
                     break;
                 case HotkeyType.HashCheck:
                     OpenHashCheck();
@@ -194,6 +201,9 @@ namespace ShareX
                     break;
                 case HotkeyType.QRCode:
                     OpenQRCode();
+                    break;
+                case HotkeyType.QRCodeDecodeFromScreen:
+                    OpenQRCodeDecodeFromScreen();
                     break;
                 case HotkeyType.Ruler:
                     OpenRuler(safeTaskSettings);
@@ -578,7 +588,7 @@ namespace ShareX
             }
         }
 
-        public static Bitmap AddImageEffects(Bitmap bmp, TaskSettingsImage taskSettingsImage)
+        public static Bitmap ApplyImageEffects(Bitmap bmp, TaskSettingsImage taskSettingsImage)
         {
             if (bmp != null && !bmp.PixelFormat.HasFlag(PixelFormat.Indexed))
             {
@@ -789,7 +799,7 @@ namespace ShareX
         {
             if (taskSettings == null) taskSettings = TaskSettings.GetDefaultTaskSettings();
 
-            RegionCaptureTasks.ShowScreenColorPickerDialog(taskSettings.CaptureSettings.SurfaceOptions, true);
+            RegionCaptureTasks.ShowScreenColorPickerDialog(taskSettings.CaptureSettings.SurfaceOptions);
         }
 
         public static void OpenScreenColorPicker(TaskSettings taskSettings = null)
@@ -890,6 +900,12 @@ namespace ShareX
                 }
             };
             thumbnailerForm.Show();
+        }
+
+        public static void OpenClipboardViewer()
+        {
+            ClipboardViewerForm clipboardViewerForm = new ClipboardViewerForm();
+            clipboardViewerForm.Show();
         }
 
         public static void OpenImageEditor(TaskSettings taskSettings = null)
@@ -998,7 +1014,7 @@ namespace ShareX
                         {
                             Program.MainForm.InvokeSafe(() =>
                             {
-                                UploadManager.UploadImage(output);
+                                UploadManager.UploadImage(output, taskSettings);
                             });
                         };
 
@@ -1033,10 +1049,12 @@ namespace ShareX
 
         public static void OpenImageEffects(TaskSettings taskSettings = null)
         {
-            if (taskSettings == null) taskSettings = Program.DefaultTaskSettings;
-
             string filePath = ImageHelpers.OpenImageFileDialog();
+            OpenImageEffects(filePath, taskSettings);
+        }
 
+        public static void OpenImageEffects(string filePath, TaskSettings taskSettings = null)
+        {
             if (!string.IsNullOrEmpty(filePath))
             {
                 Bitmap bmp = ImageHelpers.LoadImage(filePath);
@@ -1049,6 +1067,8 @@ namespace ShareX
                     }
                     else
                     {
+                        if (taskSettings == null) taskSettings = Program.DefaultTaskSettings;
+
                         using (ImageEffectsForm imageEffectsForm = new ImageEffectsForm(bmp, taskSettings.ImageSettings.ImageEffectPresets,
                             taskSettings.ImageSettings.SelectedImageEffectPreset))
                         {
@@ -1059,6 +1079,28 @@ namespace ShareX
                     }
                 }
             }
+        }
+
+        public static ImageEffectsForm OpenImageEffectsSingleton(TaskSettings taskSettings = null)
+        {
+            if (taskSettings == null) taskSettings = Program.DefaultTaskSettings;
+
+            bool firstInstance = !ImageEffectsForm.IsInstanceActive;
+
+            ImageEffectsForm imageEffectsForm = ImageEffectsForm.GetFormInstance(taskSettings.ImageSettings.ImageEffectPresets,
+                taskSettings.ImageSettings.SelectedImageEffectPreset);
+
+            if (firstInstance)
+            {
+                imageEffectsForm.FormClosed += (sender, e) => taskSettings.ImageSettings.SelectedImageEffectPreset = imageEffectsForm.SelectedPresetIndex;
+                imageEffectsForm.Show();
+            }
+            else
+            {
+                imageEffectsForm.ForceActivate();
+            }
+
+            return imageEffectsForm;
         }
 
         public static void OpenMonitorTest()
@@ -1111,6 +1153,11 @@ namespace ShareX
         public static void OpenQRCode()
         {
             QRCodeForm.EncodeClipboard().Show();
+        }
+
+        public static void OpenQRCodeDecodeFromScreen()
+        {
+            QRCodeForm.OpenFormDecodeFromScreen();
         }
 
         public static void OpenRuler(TaskSettings taskSettings = null)
@@ -1302,7 +1349,7 @@ namespace ShareX
                 if (MessageBox.Show(string.Format(Resources.ScreenRecordForm_StartRecording_does_not_exist, ffmpegPath),
                     "ShareX - " + Resources.ScreenRecordForm_StartRecording_Missing + " ffmpeg.exe", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
-                    DialogResult downloadDialogResult = FFmpegDownloader.DownloadFFmpeg(false, DownloaderForm_InstallRequested);
+                    DialogResult downloadDialogResult = FFmpegGitHubDownloader.DownloadFFmpeg(false, DownloaderForm_InstallRequested);
 
                     if (downloadDialogResult == DialogResult.OK)
                     {
@@ -1330,7 +1377,7 @@ namespace ShareX
 
         private static void DownloaderForm_InstallRequested(string filePath)
         {
-            bool result = FFmpegDownloader.ExtractFFmpeg(filePath, Program.ToolsFolder);
+            bool result = FFmpegGitHubDownloader.ExtractFFmpeg(filePath, Program.ToolsFolder);
 
             if (result)
             {
@@ -1520,6 +1567,7 @@ namespace ShareX
                     case HotkeyType.HashCheck: return Resources.application_task;
                     case HotkeyType.DNSChanger: return Resources.network_ip;
                     case HotkeyType.QRCode: return ShareXResources.IsDarkTheme ? Resources.barcode_2d_white : Resources.barcode_2d;
+                    case HotkeyType.QRCodeDecodeFromScreen: return ShareXResources.IsDarkTheme ? Resources.barcode_2d_white : Resources.barcode_2d;
                     case HotkeyType.Ruler: return Resources.ruler_triangle;
                     case HotkeyType.IndexFolder: return Resources.folder_tree;
                     case HotkeyType.ImageCombiner: return Resources.document_break;
@@ -1566,7 +1614,7 @@ namespace ShareX
             return screenshot;
         }
 
-        public static void AddCustomUploader(string filePath)
+        public static void ImportCustomUploader(string filePath)
         {
             if (Program.UploadersConfig != null)
             {
@@ -1595,7 +1643,7 @@ namespace ShareX
                             if (cui.DestinationType.HasFlag(CustomUploaderDestinationType.TextUploader)) destinations.Add("texts");
                             if (cui.DestinationType.HasFlag(CustomUploaderDestinationType.FileUploader)) destinations.Add("files");
                             if (cui.DestinationType.HasFlag(CustomUploaderDestinationType.URLShortener) ||
-                                (cui.DestinationType.HasFlag(CustomUploaderDestinationType.URLSharingService))) destinations.Add("urls");
+                                cui.DestinationType.HasFlag(CustomUploaderDestinationType.URLSharingService)) destinations.Add("urls");
 
                             string destinationsText = string.Join("/", destinations);
 
@@ -1662,6 +1710,30 @@ namespace ShareX
                 catch (Exception e)
                 {
                     DebugHelper.WriteException(e);
+                }
+            }
+        }
+
+        public static void ImportImageEffect(string filePath)
+        {
+            string configJson = null;
+
+            try
+            {
+                configJson = ImageEffectPackager.ExtractPackage(filePath, Program.ImageEffectsFolder);
+            }
+            catch (Exception ex)
+            {
+                ex.ShowError(false);
+            }
+
+            if (!string.IsNullOrEmpty(configJson))
+            {
+                ImageEffectsForm imageEffectsForm = OpenImageEffectsSingleton(Program.DefaultTaskSettings);
+
+                if (imageEffectsForm != null)
+                {
+                    imageEffectsForm.ImportImageEffect(configJson);
                 }
             }
         }
